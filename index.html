@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alarm Clock</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      #time {
+        font-size: 48px;
+        margin-bottom: 20px;
+      }
+      #alarm-time {
+        margin-bottom: 20px;
+      }
+      input[type="time"] {
+        font-size: 24px;
+        padding: 5px;
+      }
+      button {
+        font-size: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Alarm Clock</h1>
+    <div id="time"></div>
+    <div>
+      <label for="alarm-time">Set Alarm Time:</label>
+      <input type="time" id="alarm-time" />
+    </div>
+    <button id="set-alarm">Set Alarm</button>
+    <button id="clear-alarm">Clear Alarm</button>
+
+    <script>
+      const timeDisplay = document.getElementById("time");
+      const alarmTimeInput = document.getElementById("alarm-time");
+      const setAlarmButton = document.getElementById("set-alarm");
+      const clearAlarmButton = document.getElementById("clear-alarm");
+      let alarmTime;
+      let alarmInterval;
+
+      function updateTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const seconds = now.getSeconds().toString().padStart(2, "0");
+        timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+      }
+
+      function checkAlarm() {
+        const now = new Date();
+        const currentHours = now.getHours();
+        const currentMinutes = now.getMinutes();
+        if (
+          alarmTime &&
+          alarmTime.getHours() === currentHours &&
+          alarmTime.getMinutes() === currentMinutes
+        ) {
+          alert("Alarm!");
+          clearInterval(alarmInterval);
+        }
+      }
+
+      setAlarmButton.addEventListener("click", () => {
+        const currentTime = new Date();
+        const inputTime = new Date(alarmTimeInput.value);
+        if (inputTime < currentTime) {
+          alert("Please select a time in the future");
+          return;
+        }
+        alarmTime = inputTime;
+        alarmInterval = setInterval(checkAlarm, 1000);
+        alert("Alarm set!");
+      });
+
+      clearAlarmButton.addEventListener("click", () => {
+        alarmTime = null;
+        clearInterval(alarmInterval);
+        alert("Alarm cleared!");
+      });
+
+      updateTime();
+      setInterval(updateTime, 1000);
+    </script>
+  </body>
+</html>
